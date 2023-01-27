@@ -11,7 +11,7 @@ describe("Cadastro de usuarios alura pic", () => {
   });
 
   it("fazer login com usuario valido", () => {
-    cy.login("flavio", "123");
+    cy.login(Cypress.env("userName"), Cypress.env("password"));
     cy.contains("a", "(Logout)").should("be.visible");
   });
 });
