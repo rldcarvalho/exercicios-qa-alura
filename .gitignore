@@ -282,3 +282,4 @@ dist
 *.docx
 *.mp4
 cypress/cypress.env.json
+selenium/leilao/drivers/
