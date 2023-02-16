@@ -12,6 +12,15 @@ import java.time.format.DateTimeFormatter;
 public class LeiloesTest {
 
     private LeiloesPage paginaDeLeiloes;
+    private CadastroLeilaoPage paginaDeCadastro;
+
+    @BeforeEach
+    void beforeEach(){
+        LoginPage paginaDeLogin = new LoginPage();
+        paginaDeLogin.preencheFormularioDeLogin("fulano", "pass");
+        this.paginaDeLeiloes = paginaDeLogin.efetuaLogin();
+        this.paginaDeCadastro = paginaDeLeiloes.carregarFormulario();
+    }
 
     @AfterEach
     void afterEach(){
@@ -20,10 +29,6 @@ public class LeiloesTest {
 
     @Test
     void deveriaCadastrarLeilao(){
-        LoginPage paginaDeLogin = new LoginPage();
-        paginaDeLogin.preencheFormularioDeLogin("fulano", "pass");
-        this.paginaDeLeiloes = paginaDeLogin.efetuaLogin();
-        CadastroLeilaoPage paginaDeCadastro = paginaDeLeiloes.carregarFormulario();
 
         String hoje = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         String nome = "Leilao do dia " + hoje;
@@ -32,6 +37,15 @@ public class LeiloesTest {
         this.paginaDeLeiloes = paginaDeCadastro.cadastrarLeilao(nome, valor, hoje);
 
         Assertions.assertTrue(paginaDeLeiloes.isLeilaoCadastrado(nome, valor, hoje));
+    }
+
+    @Test
+    void deveriaValidarCadastroDeLeilao(){
+        this.paginaDeLeiloes = paginaDeCadastro.cadastrarLeilao("", "", "");
+
+        Assertions.assertTrue(this.paginaDeLeiloes.isPaginaAtual());
+        Assertions.assertTrue(this.paginaDeCadastro.isMensagensDeValidacaoVisiveis());
+
     }
 
 }
